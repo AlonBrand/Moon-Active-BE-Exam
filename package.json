@@ -1,0 +1,19 @@
+{
+  "name": "moon-active-be-exam",
+  "version": "1.0.0",
+  "description": "A slot machine and a points accumlation system that grants rewards using microservices architecture",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlonBrand/Moon-Active-BE-Exam.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlonBrand/Moon-Active-BE-Exam/issues"
+  },
+  "homepage": "https://github.com/AlonBrand/Moon-Active-BE-Exam#readme"
+}
