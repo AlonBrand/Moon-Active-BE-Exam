@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/AlonBrand/Moon-Active-BE-Exam/issues"
   },
-  "homepage": "https://github.com/AlonBrand/Moon-Active-BE-Exam#readme"
+  "homepage": "https://github.com/AlonBrand/Moon-Active-BE-Exam#readme",
+  "dependencies": {
+    "redis": "^4.6.15"
+  }
 }
