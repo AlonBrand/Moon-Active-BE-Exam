@@ -22,7 +22,8 @@ Project details and flow:
         * PORT=`XXXX`
         * Redis_HOST=`YYYY`
         * Redis_PORT=`ZZZZ`
-    This enable listening to HTTP requests and communicate with Redis.
+
+    * This enable listening to HTTP requests and communicate with Redis.
 
 User data initial struct in Redis:
 
