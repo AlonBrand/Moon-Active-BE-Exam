@@ -53,7 +53,10 @@ app.get('/spin/:userId', async (req, res) => {
       return res.status(500).json({ error: "Error while setting the rewards!" })
     }
 
-    res.json("Congratulations!")
+    const userInfo = await axios.get(`http://localhost:3002/info/${userId}`);
+    res.json({
+      info: userInfo?.data
+    })
   }
   catch (error) {
     return res.json({ error: "Error in slot machine service" })

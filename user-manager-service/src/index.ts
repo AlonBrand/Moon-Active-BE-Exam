@@ -28,7 +28,7 @@ app.post('/dec/spins/:userId', async (req, res) => {
 
     res.status(200).json(true);
   } catch (error) {
-    return res.json({ error: "Error in user manager dec spins route" })
+    return res.status(500).json({ error: "Error in user manager dec spins route" })
   }
 });
 
@@ -42,7 +42,7 @@ app.post('/inc/points/:userId', async (req, res) => {
     res.status(200).json(newPoints); 
   }
   catch (error) {
-    return res.json({ error: "Error in user manager inc points route" })
+    return res.status(500).json({ error: "Error in user manager inc points route" })
   }
 });
 
@@ -65,6 +65,27 @@ app.post('/inc/:userId', async (req, res) => {
   }
 });
 
+app.get('/info/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const keysPattern = `user:${userId}:`;
+  
+  try {
+    const [userPoints, userCoins, userSpins] = await Promise.all([
+      client.get(`${keysPattern}points`),
+      client.get(`${keysPattern}coins`),
+      client.get(`${keysPattern}spins`)
+    ]);
+
+    res.json({
+      points: userPoints,
+      coins: userCoins,
+      spins: userSpins
+    });
+  } catch (error) {
+    console.error("Error retrieving user info:", error);
+    res.status(500).json({ error: "Error in user manager get info" });
+  }
+});
 
 app.listen(port, () => {
   console.log(`User manager service listening on port ${port}`);
