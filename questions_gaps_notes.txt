@@ -2,6 +2,8 @@ Questions:
 1: should the env file be mutual?
 2: should the redis client be mutual?
 3. Move redis to cloud service?
+4. Deploy with docker?
 
 Gaps:
 1. Improve TS syntex.
+2. Improve variables names.
