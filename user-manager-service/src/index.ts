@@ -16,6 +16,7 @@ const port = process.env.PORT || 3001;
 
 app.post('/dec/spins/:userId', async (req, res) => {
   const userId = req.params.userId;
+
   try {
     const newSpins = await client.decr(`user:${userId}:spins`);
     console.log(`Decreasing spins from ${newSpins+1} to ${newSpins}`);
@@ -33,10 +34,11 @@ app.post('/dec/spins/:userId', async (req, res) => {
 });
 
 app.post('/inc/points/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const grantedPoints = req.body.points;
+  if (!grantedPoints) return res.status(400).json({ error: 'Points not provided' });
+
   try {
-    const userId = req.params.userId;
-    const grantedPoints = req.body.points;
-    if (!grantedPoints) return;
     console.log("Increasing poinsts by", grantedPoints);
     const newPoints = await client.INCRBY(`user:${userId}:points`, grantedPoints);
     res.status(200).json(newPoints); 
@@ -47,14 +49,14 @@ app.post('/inc/points/:userId', async (req, res) => {
 });
 
 app.post('/inc/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const payload = req.body;
+
   try {
-    const userId = req.params.userId;
-    const payload = req.body;
-    
     // Start setting keys (update values asynchronously)
     const incrementPromises = Object.keys(payload).map((key) => {
       console.log(`Setting user ${key} to ${payload[key]}`);
-      return client.set(`user:${userId}:${key}`, payload[key]);
+      return client.INCRBY(`user:${userId}:${key}`, payload[key]);
     });
     
     // When all preomises were resolved update the caller
@@ -68,8 +70,9 @@ app.post('/inc/:userId', async (req, res) => {
 app.get('/info/:userId', async (req, res) => {
   const userId = req.params.userId;
   const keysPattern = `user:${userId}:`;
-  
+
   try {
+    // Create an array of promises (responses from the redis async get function) and await for them to resolve
     const [userPoints, userCoins, userSpins] = await Promise.all([
       client.get(`${keysPattern}points`),
       client.get(`${keysPattern}coins`),

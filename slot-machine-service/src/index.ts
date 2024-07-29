@@ -42,6 +42,7 @@ app.get('/spin/:userId', async (req, res) => {
 
     /* Calculate granted points: */
     const grantedPoints = slotMachineValues?.reduce((acc: number, curr: number) => acc + curr, 0);
+    console.log("🚀 ~ app.get ~ grantedPoints:", grantedPoints)
 
     /* Update user points atomically */
     const incPointsResponse = await axios.post(`http://localhost:3001/inc/points/${userId}`, {
@@ -49,7 +50,8 @@ app.get('/spin/:userId', async (req, res) => {
     });
 
     /* Calculate rewards: */ 
-    const rewards = calculateRewards(incPointsResponse?.data);
+    const rewards = calculateRewards(grantedPoints, incPointsResponse?.data);
+    console.log("🚀 ~ app.get ~ rewards:", rewards)
     const incRewards = await axios.post(`http://localhost:3001/inc/${userId}`, rewards);
 
     /* If failed to update rewards: show error to the client */
