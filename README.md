@@ -19,9 +19,9 @@ Project details and flow:
 * Notes:
     1. User manager is the only service that allowed to write to Redis memory.
     2. Need to crate .env file in each of the services in the following manner:
-        * PORT=XXXX
-        * Redis_HOST=YYYY
-        * Redis_PORT=ZZZZ
+        * PORT=`XXXX`
+        * Redis_HOST=`YYYY`
+        * Redis_PORT=`ZZZZ`
     This enable listening to HTTP requests and communicate with Redis.
 
 User data initial struct in Redis:
