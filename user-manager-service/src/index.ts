@@ -12,7 +12,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 const app = express();
 app.use(express.json());
 
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3001;
 
 app.post('/dec/spins/:userId', async (req, res) => {
   const userId = req.params.userId;
