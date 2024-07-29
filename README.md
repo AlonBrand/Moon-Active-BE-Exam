@@ -18,9 +18,9 @@ Project details and flow:
 
 * Notes:
     1. Need to crate .env file in each of the services in the following manner:
-        PORT=XXXX
-        REDIS_HOST=YYYY
-        REDIS_PORT=ZZZZ 
+        * PORT=XXXX
+        * REDIS_HOST=YYYY
+        * REDIS_PORT=ZZZZ 
 
 User data initial struct in redis:
 {
