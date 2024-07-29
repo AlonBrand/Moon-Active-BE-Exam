@@ -17,7 +17,8 @@ Project details and flow:
     4. Send a JSON to the user with the results.
 
 * Notes:
-    1. Need to crate .env file in each of the services in the following manner:
+    1. User manager is the only service that allowed to write to redis memory.
+    2. Need to crate .env file in each of the services in the following manner:
         * PORT=XXXX
         * REDIS_HOST=YYYY
         * REDIS_PORT=ZZZZ
