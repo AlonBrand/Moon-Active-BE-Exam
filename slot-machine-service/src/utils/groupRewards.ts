@@ -1,7 +1,4 @@
-interface Reward {
-    name: string;
-    value: number;
-  }
+import { Reward } from "../types/rewardsTypes";
 
 export function groupRewards(rewards: Reward[]): Record<string, number>  {
     if (rewards === undefined || rewards.length === 0) return {};

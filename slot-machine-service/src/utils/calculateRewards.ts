@@ -1,20 +1,6 @@
 import configuration from '../../configurations/configuration.json' assert { type: 'json' };
 import { groupRewards } from './groupRewards.js';
-
-interface Reward {
-  name: string;
-  value: number;
-}
-
-interface Mission {
-  rewards: Reward[];
-  pointsGoal: number;
-}
-
-interface MissionsConfig {
-  missions: Mission[];
-  repeatedIndex: number;
-}
+import { Reward, MissionsConfig } from '../types/rewardsTypes';
 
 // export function calculateRewards(grantedPoints: number, newPoints: number): Reward[] {
 //   console.log("🚀 ~ calculateRewards ~ grantedPoints:", grantedPoints);
@@ -67,21 +53,19 @@ export function calculateRewards(newPoints: number): Record<string, number> {
   if (newPoints === undefined || configuration === undefined) return {};
 
   const rewards: Reward[] = [];
-  let totalPoints = newPoints;
   const { missions, repeatedIndex } = configuration as MissionsConfig;
-  const adjustedRepeatedIndex = repeatedIndex - 1;
-
-  // Calculate the rewards based on the new total points:
   let missionIndex = 0;
-  while (totalPoints > 0) {
+
+  while (newPoints > 0) {
+    console.log("🚀 ~ calculateRewards ~ newPoints:", newPoints)
     const currentMission = missions[missionIndex];
     if (currentMission !== undefined) {
-      if (totalPoints >= currentMission.pointsGoal) {
+      if (newPoints >= currentMission.pointsGoal) {
         rewards.push(...currentMission.rewards);
-        totalPoints -= currentMission.pointsGoal;
+        newPoints -= currentMission.pointsGoal;
         missionIndex++;
         if (missionIndex >= missions.length) {
-          missionIndex = adjustedRepeatedIndex;
+          missionIndex = repeatedIndex - 1;
         }
       } else {
         break;
