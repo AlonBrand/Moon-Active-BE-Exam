@@ -20,11 +20,11 @@ Project details and flow:
     1. Need to crate .env file in each of the services in the following manner:
         * PORT=XXXX
         * REDIS_HOST=YYYY
-        * REDIS_PORT=ZZZZ 
+        * REDIS_PORT=ZZZZ
+    This enable listening to HTTP requests and communicate with redis.
 
 User data initial struct in redis:
-{
-    points: 0,
-    coins: 0,
-    spins: ? (50 at the moment)
-}
+
+- **Points**: `0`
+- **Coins**: `0`
+- **Spins**: `50` (currently)
