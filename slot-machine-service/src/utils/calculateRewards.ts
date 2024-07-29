@@ -63,37 +63,31 @@ interface MissionsConfig {
 //   return rewards;
 // }
 
-export function calculateRewards(grantedPoints: number, newPoints: number): Reward[] {
-    if (grantedPoints === undefined || newPoints === undefined || configuration === undefined) return [];
-  
-    const rewards: Reward[] = [];
-    let totalPoints = newPoints;
-    const { missions, repeatedIndex } = configuration as MissionsConfig;
-    const adjustedRepeatedIndex = repeatedIndex - 1;
-  
-    // Calculate the rewards based on the new total points:
-    let missionIndex = 0;
-    while (totalPoints > 0) {
-      console.log("🚀 ~ calculateRewards ~ totalPoints:", totalPoints)
-      const currentMission = missions[missionIndex];
-      console.log("🚀 ~ calculateRewards ~ currentMission power:", currentMission.pointsGoal)
-      console.log("🚀 ~ calculateRewards ~ currentMission rewards:", currentMission.rewards)
-      if (currentMission !== undefined) {
-        if (totalPoints >= currentMission.pointsGoal) {
-          rewards.push(...currentMission.rewards);
-          totalPoints -= currentMission.pointsGoal;
-          missionIndex++;
-          if (missionIndex >= missions.length) {
-            missionIndex = adjustedRepeatedIndex;
-          }
-        } else {
-          break;
+export function calculateRewards(newPoints: number): Record<string, number> {
+  if (newPoints === undefined || configuration === undefined) return {};
+
+  const rewards: Reward[] = [];
+  let totalPoints = newPoints;
+  const { missions, repeatedIndex } = configuration as MissionsConfig;
+  const adjustedRepeatedIndex = repeatedIndex - 1;
+
+  // Calculate the rewards based on the new total points:
+  let missionIndex = 0;
+  while (totalPoints > 0) {
+    const currentMission = missions[missionIndex];
+    if (currentMission !== undefined) {
+      if (totalPoints >= currentMission.pointsGoal) {
+        rewards.push(...currentMission.rewards);
+        totalPoints -= currentMission.pointsGoal;
+        missionIndex++;
+        if (missionIndex >= missions.length) {
+          missionIndex = adjustedRepeatedIndex;
         }
+      } else {
+        break;
       }
     }
+  }
     
-
-    console.log(rewards);
-    console.log(groupRewards(rewards));
-    return rewards;
+  return groupRewards(rewards);
 }

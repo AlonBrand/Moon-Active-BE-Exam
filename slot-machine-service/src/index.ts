@@ -31,10 +31,11 @@ app.get('/spin/:userId', async (req, res) => {
 
     // Generate randon values:
     const slotMachineValues = Array.from({ length: 3 }, () => Math.floor(Math.random() * 10));
-    // if (!hasThreeIdenticalValues(slotMachineValues)) {
-    //   res.status(200).json({ error: 'Not your lucky spin :(' });
-    //   return;
-    // };
+    // const slotMachineValues = [5, 5, 5]; // For testing
+    if (!hasThreeIdenticalValues(slotMachineValues)) {
+      res.status(200).json({ error: 'Not your lucky spin :(' });
+      return;
+    };
 
     // Calculate granted points:
     const grantedPoints = slotMachineValues?.reduce((acc: number, curr: number) => acc + curr, 0);
@@ -44,24 +45,15 @@ app.get('/spin/:userId', async (req, res) => {
       points: grantedPoints
     });
 
-    const newPoints = incPointsResponse?.data;
-
     // Calculate rewards:
+    const rewards = calculateRewards(incPointsResponse?.data);
+    const incRewards = await axios.post(`http://localhost:3002/inc/${userId}`, rewards);
 
-    const rewards = calculateRewards(grantedPoints, newPoints);
+    if (!incRewards.data) {
+      return res.status(500).json({ error: "Error while setting the rewards!" })
+    }
 
-
-    // const slotMachineValues = await spinSlotMachine(Number(userId), res);
-    // console.log("🚀 ~ app.get ~ isSpinAllowed:", isSpinAllowed)
-    // console.log("Generated slot machine values:", slotMachineValues)
-    // /*
-
-    // */
-    // const payload = {
-    //   slotMachineValues
-    // }
-    // const response = await axios.post(`http://localhost:3001/accumulator/${userId}`, payload)
-    res.json(decSpinResponse.data)
+    res.json("Congratulations!")
   }
   catch (error) {
     return res.json({ error: "Error in slot machine service" })

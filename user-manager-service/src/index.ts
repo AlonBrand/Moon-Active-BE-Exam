@@ -28,8 +28,7 @@ app.post('/dec/spins/:userId', async (req, res) => {
 
     res.status(200).json(true);
   } catch (error) {
-    console.error("Error in dec spins:", error);
-    return;
+    return res.json({ error: "Error in user manager dec spins route" })
   }
 });
 
@@ -38,26 +37,33 @@ app.post('/inc/points/:userId', async (req, res) => {
     const userId = req.params.userId;
     const grantedPoints = req.body.points;
     if (!grantedPoints) return;
+    console.log("Increasing poinsts by", grantedPoints);
     const newPoints = await client.INCRBY(`user:${userId}:points`, grantedPoints);
     res.status(200).json(newPoints); 
   }
   catch (error) {
-    return res.json({ error: "Error in user manager inc points" })
+    return res.json({ error: "Error in user manager inc points route" })
   }
 });
 
-
-// app.post('/dec/:userId', async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-//     const payload = req.body;
-//     console.log("🚀 ~ app.post ~ payload:", payload);
-//     res.status(200).json({ message: 'Request received' });
-//   } catch (error) {
-//     console.error("Error in user manager dec:", error);
-//     return res.status(500).json({ error: "Error in user manager dec" });
-//   }
-// });
+app.post('/inc/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const payload = req.body;
+    
+    // Start setting keys (update values asynchronously)
+    const incrementPromises = Object.keys(payload).map((key) => {
+      console.log(`Setting user ${key} to ${payload[key]}`);
+      return client.set(`user:${userId}:${key}`, payload[key]);
+    });
+    
+    // When all preomises were resolved update the caller
+    await Promise.all(incrementPromises);
+    res.status(200).json(true);
+  } catch (error) {
+    res.status(500).json({ error: "Error in user manager inc route" });
+  }
+});
 
 
 app.listen(port, () => {
