@@ -7,3 +7,4 @@ Questions:
 Gaps:
 1. Improve TS syntex.
 2. Improve variables names.
+3. Add payloads and types.

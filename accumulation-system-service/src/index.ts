@@ -15,9 +15,19 @@ const port = process.env.PORT || 3001;
 
 app.use(express.json());
 
+interface AccumilatorPayload {
+  slotMachineValues: number[]
+}
+
 app.post('/accumulator/:userId', async (req, res) => {
-  const response = await accumulator(req, res);
-  res.json({})
+  const payload = req.body;
+  const userId = req.params.userId;
+  try {
+    const response = await accumulator(req, res);
+    res.json({})
+  } catch (error) {
+    return res.json({ error: "Error in slot accumulation system service" })
+  }
 });
 
 app.listen(port, () => {

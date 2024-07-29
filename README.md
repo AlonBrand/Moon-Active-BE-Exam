@@ -12,7 +12,7 @@ Moon-Active-BE-Exam/
 │   │   └── accumulator.ts
 │   ├── package.json
 │   ├── tsconfig.json
-│   ├── .gitignore
+│   
 │  
 ├── slot-machine-service/
 │   ├── node_modules/
@@ -23,7 +23,7 @@ Moon-Active-BE-Exam/
 │   │
 │   ├── package.json
 │   ├── tsconfig.json
-│   ├── .gitignore
+│   
 │   
 ├── .gitignore                     
 ├── README.md                       
@@ -31,7 +31,8 @@ Moon-Active-BE-Exam/
 
 User data initial struct in redis:
 {
-    coins: 0,
+    points: 0,
     missionIndex: 0,
-    spins: 50
+    coins: 0,
+    spins: ? (50 at the moment)
 }
