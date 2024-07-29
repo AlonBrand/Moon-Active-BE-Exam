@@ -1,5 +1,5 @@
 Questions:
-1: should the env file be mutual?
+1: should the env file be mutual? At the highest level of the files tree.
 2: should the redis client be mutual?
 3. Move redis to cloud service?
 4. Deploy with docker?

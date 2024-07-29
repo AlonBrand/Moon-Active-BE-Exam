@@ -20,7 +20,6 @@ app.use(express.json());
 app.get('/spin/:userId', async (req, res) => {
   try {
     const userId = req.params.userId;
-    console.log("🚀 ~ app.get ~ userId:", userId)
     const decSpinResponse = await axios.post(`http://localhost:3001/dec/spins/${userId}`);
 
     if (!decSpinResponse?.data) {
@@ -34,7 +33,10 @@ app.get('/spin/:userId', async (req, res) => {
     const slotMachineValues = Array.from({ length: 3 }, () => Math.floor(Math.random() * 10));
     // const slotMachineValues = [5, 5, 5]; // For testing
     if (!hasThreeIdenticalValues(slotMachineValues)) {
-      res.status(200).json({ info: 'Not your lucky spin :(' });
+      res.status(200).json({
+        info: 'Not your lucky spin :(', 
+        result: slotMachineValues
+      });
       return;
     };
 
