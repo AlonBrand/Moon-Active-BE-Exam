@@ -1,9 +1,9 @@
 /* index.ts */
 import express from 'express';
-// import { spinSlotMachine } from './spinSlotMachine.js';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { accumulator } from './accumulator.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,14 +15,9 @@ const port = process.env.PORT || 3001;
 
 app.use(express.json());
 
-// TODO: add rewards logic
-app.post('/rewards/:userId', async (req, res) => {
-  const rewards = req.body;
-  console.log("🚀 ~ app.get ~ rewards:", rewards)
-  // const rewards = await spinSlotMachine(req, res);
-  res.json({
-    
-  })
+app.post('/accumulator/:userId', async (req, res) => {
+  const response = await accumulator(req, res);
+  res.json({})
 });
 
 app.listen(port, () => {

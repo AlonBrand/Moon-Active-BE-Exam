@@ -16,13 +16,15 @@ const port = process.env.PORT || 3000;
 
 app.get('/spin/:userId', async (req, res) => {
   try {
-    const rewards = await spinSlotMachine(req, res);
     const userId = req.params.userId;
-    const response = await axios.post(`http://localhost:3001/rewards/${userId}`, rewards)
-    res.json(rewards)
+    const slotMachineValues = await spinSlotMachine(Number(userId), res);
+    console.log("Generated slot machine values:", slotMachineValues)
+    const response = await axios.post(`http://localhost:3001/accumulator/${userId}`, slotMachineValues)
+    res.json(slotMachineValues)
   }
   catch (error) {
     console.log("🚀 ~ app.get ~ error:", error)
+    return res.json({ error: "Reward service is down :(" })
   }
 });
 
