@@ -70,7 +70,6 @@ app.get('/spin/:userId', async (req, res) => {
     });
 
   } catch (error) {
-    console.log(error);
     return res.json({ error: "Error in slot machine service" });
   }
 });

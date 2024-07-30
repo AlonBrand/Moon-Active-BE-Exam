@@ -91,7 +91,6 @@ app.get('/info/:userId', async (req, res) => {
       spins: userSpins
     });
   } catch (error) {
-    console.error("Error retrieving user info:", error);
     res.status(500).json({ error: "Error in user manager get info" });
   }
 });
