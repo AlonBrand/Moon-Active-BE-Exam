@@ -9,6 +9,7 @@ const client = createClient({
 
 client.on('error', (err) => {
   console.error('Redis client error:', err);
+  client.quit();
 });
 
 client.connect().catch(console.error);
