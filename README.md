@@ -27,7 +27,7 @@ Project details and flow:
 
 User data struct example in Redis:
 - **user**
-    - **<userId>**
+    - **userId**
         - **points**: `X`
         - **coins**: `Y`
         - **spins**: `Z`
