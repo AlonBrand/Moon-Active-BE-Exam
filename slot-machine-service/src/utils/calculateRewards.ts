@@ -14,16 +14,11 @@ export function calculateRewards(grantedPoints: number, newPoints: number): Reco
   
   while (oldPoints > 0) {
     const currentMission = missions[missionIndex];
-    if (currentMission === undefined) break;
-    if (oldPoints >= currentMission.pointsGoal) {
-      oldPoints -= currentMission.pointsGoal;
-      missionIndex++;
-      if (missionIndex >= missions.length) {
-        missionIndex = repeatedIndex - 1;
-      }
-    }
-    else {
-      break;
+    if (currentMission === undefined || oldPoints < currentMission.pointsGoal) break;
+    oldPoints -= currentMission.pointsGoal;
+    missionIndex++;
+    if (missionIndex >= missions.length) {
+      missionIndex = repeatedIndex - 1;
     }
   }
   
