@@ -16,6 +16,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 // Initialize Express app
 const app = express();
 const port = process.env.PORT || 3000;
+const user_manager_port = 3001;
 
 // Middlewares
 app.use(express.json());
@@ -26,7 +27,7 @@ app.get('/spin/:userId', async (req, res) => {
 
   try {
     // Decrease user spin by 1 atomically
-    const decSpinResponse = await axios.post(`http://localhost:3001/dec/spins/${userId}`);
+    const decSpinResponse = await axios.post(`http://localhost:${user_manager_port}/dec/spins/${userId}`);
 
     // Check if the user has enough spins
     if (decSpinResponse?.data?.remainingSpins < 0) {
@@ -48,7 +49,7 @@ app.get('/spin/:userId', async (req, res) => {
     const grantedPoints = slotMachineValues.reduce((acc, curr) => acc + curr, 0);
 
     // Update user points atomically
-    const incPointsResponse = await axios.post(`http://localhost:3001/inc/points/${userId}`, {
+    const incPointsResponse = await axios.post(`http://localhost:${user_manager_port}/inc/points/${userId}`, {
       points: grantedPoints
     });
 
@@ -56,7 +57,7 @@ app.get('/spin/:userId', async (req, res) => {
     const rewards = calculateRewards(grantedPoints, incPointsResponse?.data);
 
     // Update user rewards atomically
-    const incRewards = await axios.post(`http://localhost:3001/inc/${userId}`, rewards);
+    const incRewards = await axios.post(`http://localhost:${user_manager_port}/inc/${userId}`, rewards);
 
     // If failed to update rewards, return an error
     if (!incRewards.data) {
@@ -64,7 +65,7 @@ app.get('/spin/:userId', async (req, res) => {
     }
 
     // Retrieve and return user information
-    const userInfo = await axios.get(`http://localhost:3001/info/${userId}`);
+    const userInfo = await axios.get(`http://localhost:${user_manager_port}/info/${userId}`);
     return res.json({
       info: userInfo?.data
     });
