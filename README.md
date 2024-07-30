@@ -17,16 +17,17 @@ Project details and flow:
     4. Send a JSON to the user with the results.
 
 * Notes:
-    1. User manager is the only service that allowed to write to Redis memory.
+    1. Need to run a "redis-server" on local machine.
     2. Need to crate .env file in each of the services in the following manner:
         * PORT=`XXXX`
         * Redis_HOST=`YYYY`
         * Redis_PORT=`ZZZZ`
-
     * This enable listening to HTTP requests and communicate with Redis.
+    3. User manager is the only service that allowed to write to Redis memory.
 
-User data initial struct in Redis:
-
-- **points**: `0`
-- **coins**: `0`
-- **spins**: `50` (currently)
+User data struct example in Redis:
+- **user**
+    - **<userId>**
+        - **points**: `X`
+        - **coins**: `Y`
+        - **spins**: `Z`
