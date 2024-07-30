@@ -1,9 +1,5 @@
-Questions:
-1: should the env file be mutual? At the highest level of the files tree.
-2. Move redis to cloud service?
-3. Deploy with docker?
+Questions
 
-Gaps:
-1. Improve TS syntex.
-2. Improve variables names.
-3. Add payloads and types.
+1. Should the .env file be mutual, located at the highest level of the file tree? (Currently, each service has its own .env file).
+2. Should move Redis to a cloud service?
+3. Should deploy with Docker?
