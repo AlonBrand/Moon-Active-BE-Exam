@@ -1,4 +1,3 @@
-/* index.ts */
 import path from 'path';
 import { fileURLToPath } from 'url';
 import express from 'express';
@@ -7,70 +6,76 @@ import axios from 'axios';
 import { hasThreeIdenticalValues } from './utils/hasThreeIdenticalValues.js';
 import { calculateRewards } from './utils/calculateRewards.js';
 
+// Resolve __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
+// Initialize Express app
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Middlewares
 app.use(express.json());
 
+// Route to handle slot machine spin
 app.get('/spin/:userId', async (req, res) => {
   const userId = req.params.userId;
+
   try {
-    /* Decrease user spin by 1 atomically */
+    // Decrease user spin by 1 atomically
     const decSpinResponse = await axios.post(`http://localhost:3001/dec/spins/${userId}`);
 
-    if (!decSpinResponse?.data) {
-      res.status(400).json({ error: 'Not enough spins :(' });
-      return;
+    // Check if the user has enough spins
+    if (decSpinResponse?.data?.remainingSpins < 0) {
+      return res.status(400).json({ error: 'Not enough spins :(' });
     }
 
-    /* Generate randon values */
+    // Generate random values for the slot machine
     const slotMachineValues = Array.from({ length: 3 }, () => Math.floor(Math.random() * 10));
 
-    /* If no three identical digits: return */
+    // If no three identical digits, return without rewards
     if (!hasThreeIdenticalValues(slotMachineValues)) {
-      res.status(200).json({
-        info: 'Not your lucky spin :(', 
+      return res.status(200).json({
+        info: 'Not your lucky spin :(',
         result: slotMachineValues
       });
-      return;
-    };
+    }
 
-    /* Calculate granted points: */
-    const grantedPoints = slotMachineValues?.reduce((acc: number, curr: number) => acc + curr, 0);
-    console.log("🚀 ~ app.get ~ grantedPoints:", grantedPoints)
+    // Calculate granted points based on slot machine values
+    const grantedPoints = slotMachineValues.reduce((acc, curr) => acc + curr, 0);
 
-    /* Update user points atomically */
+    // Update user points atomically
     const incPointsResponse = await axios.post(`http://localhost:3001/inc/points/${userId}`, {
       points: grantedPoints
     });
 
-    /* Calculate rewards: */ 
+    // Calculate rewards based on the updated points
     const rewards = calculateRewards(grantedPoints, incPointsResponse?.data);
-    console.log("🚀 ~ app.get ~ rewards:", rewards)
+
+    // Update user rewards atomically
     const incRewards = await axios.post(`http://localhost:3001/inc/${userId}`, rewards);
 
-    /* If failed to update rewards: show error to the client */
+    // If failed to update rewards, return an error
     if (!incRewards.data) {
-      return res.status(500).json({ error: "Error while setting the rewards!" })
+      return res.status(500).json({ error: "Error while setting the rewards!" });
     }
 
-    /* Retrue a JSON with the user info to the client */
+    // Retrieve and return user information
     const userInfo = await axios.get(`http://localhost:3001/info/${userId}`);
-    res.json({
+    return res.json({
       info: userInfo?.data
-    })
-  }
-  catch (error) {
+    });
+
+  } catch (error) {
     console.log(error);
-    return res.json({ error: "Error in slot machine service" })
+    return res.json({ error: "Error in slot machine service" });
   }
 });
 
+// Start the server
 app.listen(port, () => {
   console.log(`Slot Machine Service listening on port ${port}`);
 });
